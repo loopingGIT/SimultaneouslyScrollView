@@ -9,6 +9,9 @@ import UIKit
 @available(macOS, unavailable)
 public protocol SimultaneouslyScrollViewHandler {
 #if os(iOS)
+    /// Publisher to notify if the `ScrollView`s scroll offset
+    var scrollOffsetPublisher: AnyPublisher<CGPoint, Never> { get }
+    
     /// Publisher to notify if the `ScrollView`s are scrolled to the bottom
     var scrolledToBottomPublisher: AnyPublisher<Bool, Never> { get }
 

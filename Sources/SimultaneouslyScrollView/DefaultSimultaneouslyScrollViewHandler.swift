@@ -7,9 +7,15 @@ internal class DefaultSimultaneouslyScrollViewHandler: NSObject, SimultaneouslyS
     private weak var lastScrollingScrollView: UIScrollView?
 
     private let scrolledToBottomSubject = PassthroughSubject<Bool, Never>()
+    
+    private let scrollOffsetSubject = PassthroughSubject<CGPoint, Never>()
 
     var scrolledToBottomPublisher: AnyPublisher<Bool, Never> {
         scrolledToBottomSubject.eraseToAnyPublisher()
+    }
+    
+    var scrollOffsetPublisher: AnyPublisher<CGPoint, Never> {
+        scrollOffsetSubject.eraseToAnyPublisher()
     }
 
     func register(scrollView: UIScrollView) {
@@ -77,6 +83,8 @@ extension DefaultSimultaneouslyScrollViewHandler: UIScrollViewDelegate {
         scrollViewsStore.allObjects
             .filter { $0 != lastScrollingScrollView }
             .forEach { $0.setContentOffset(scrollView.contentOffset, animated: false) }
+        
+        scrollOffsetSubject.send(scrollView.contentOffset)
     }
 }
 #endif
