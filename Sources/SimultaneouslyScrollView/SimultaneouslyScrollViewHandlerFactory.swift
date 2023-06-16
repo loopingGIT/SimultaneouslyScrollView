@@ -8,8 +8,8 @@ public class SimultaneouslyScrollViewHandlerFactory {
 #if os(iOS)
     /// Creates a new `SimultaneouslyScrollViewHandler` instance
     /// - Returns: A new `SimultaneouslyScrollViewHandler` instance
-    public static func create() -> SimultaneouslyScrollViewHandler {
-        DefaultSimultaneouslyScrollViewHandler()
+    public static func create(maxScrollPosition: CGPoint? = nil) -> SimultaneouslyScrollViewHandler {
+        DefaultSimultaneouslyScrollViewHandler(maxScrollPosition: maxScrollPosition)
     }
 #else
     public static func create() -> SimultaneouslyScrollViewHandler {

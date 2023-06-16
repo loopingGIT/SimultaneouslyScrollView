@@ -9,6 +9,12 @@ internal class DefaultSimultaneouslyScrollViewHandler: NSObject, SimultaneouslyS
     private let scrolledToBottomSubject = PassthroughSubject<Bool, Never>()
     
     private let scrollOffsetSubject = PassthroughSubject<CGPoint, Never>()
+    
+    private let maxScrollPosition: CGPoint?
+    
+    init(maxScrollPosition: CGPoint? = nil) {
+        self.maxScrollPosition = maxScrollPosition
+    }
 
     var scrolledToBottomPublisher: AnyPublisher<Bool, Never> {
         scrolledToBottomSubject.eraseToAnyPublisher()
@@ -82,7 +88,16 @@ extension DefaultSimultaneouslyScrollViewHandler: UIScrollViewDelegate {
 
         scrollViewsStore.allObjects
             .filter { $0 != lastScrollingScrollView }
-            .forEach { $0.setContentOffset(scrollView.contentOffset, animated: false) }
+            .forEach {
+                if let maxScrollPosition {
+                    let contentOffset: CGPoint = .init(x: min(maxScrollPosition.x, scrollView.contentOffset.x),
+                                                       y: min(maxScrollPosition.y, scrollView.contentOffset.y))
+                    
+                    $0.setContentOffset(contentOffset, animated: false)
+                } else {
+                    $0.setContentOffset(scrollView.contentOffset, animated: false)
+                }
+            }
         
         scrollOffsetSubject.send(scrollView.contentOffset)
     }
