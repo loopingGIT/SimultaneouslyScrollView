@@ -10,6 +10,8 @@ internal class DefaultSimultaneouslyScrollViewHandler: NSObject, SimultaneouslyS
     
     private let scrollOffsetSubject = PassthroughSubject<CGPoint, Never>()
     
+    private let scrollViewWithScrollOffsetSubject = PassthroughSubject<(UIScrollView, CGPoint), Never>()
+    
     private let stopScrollPosition: CGPoint?
     
     init(stopScrollPosition: CGPoint? = nil) {
@@ -22,6 +24,10 @@ internal class DefaultSimultaneouslyScrollViewHandler: NSObject, SimultaneouslyS
     
     var scrollOffsetPublisher: AnyPublisher<CGPoint, Never> {
         scrollOffsetSubject.eraseToAnyPublisher()
+    }
+    
+    var scrollViewAndOfssetPublisher: AnyPublisher<(UIScrollView, CGPoint), Never> {
+        scrollViewWithScrollOffsetSubject.eraseToAnyPublisher()
     }
 
     func register(scrollView: UIScrollView) {
@@ -99,6 +105,7 @@ extension DefaultSimultaneouslyScrollViewHandler: UIScrollViewDelegate {
             }
         
         scrollOffsetSubject.send(scrollView.contentOffset)
+        scrollViewWithScrollOffsetSubject.send((scrollView, contentOffset))
     }
 }
 #endif
