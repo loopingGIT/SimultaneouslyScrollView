@@ -98,7 +98,7 @@ extension DefaultSimultaneouslyScrollViewHandler: UIScrollViewDelegate {
                 }
             }
         
-//        scrollOffsetSubject.send(scrollView.contentOffset)
+        scrollOffsetSubject.send(scrollView.contentOffset)
     }
 }
 #endif
